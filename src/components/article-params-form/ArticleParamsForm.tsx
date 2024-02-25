@@ -54,7 +54,7 @@ export const ArticleParamsForm = ({params, setParams}: ArticleParamsFormProps) =
 	}
 	
 
-	function handleReset() {
+	const handleReset = () => {
 		setState(defaultArticleState);
 		setParams(defaultArticleState);
 	}
