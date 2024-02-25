@@ -13,7 +13,7 @@ const domNode = document.getElementById('root') as HTMLDivElement;
 const root = createRoot(domNode);
 
 const App = () => {
- 	const [articleStyles, setArticleStyles] = useState(defaultArticleState);
+	const [articleStyles, setArticleStyles] = useState(defaultArticleState);
 
 	return (
 		<div

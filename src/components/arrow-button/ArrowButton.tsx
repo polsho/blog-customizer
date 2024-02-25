@@ -9,23 +9,23 @@ export type OnClick = () => void;
 type ArrowButtonProps = {
 	onClick: OnClick;
 	isContainerOpen: boolean;
-}
+};
 
-export const ArrowButton = ({onClick, isContainerOpen}: ArrowButtonProps) => {
+export const ArrowButton = ({ onClick, isContainerOpen }: ArrowButtonProps) => {
 	const [isOpen, setIsOpen] = useState(isContainerOpen);
 	const imageClassName = clsx({
 		[styles.arrow]: true,
 		[styles.arrow_open]: isOpen,
-	  });
+	});
 	const containerClassName = clsx({
 		[styles.container]: true,
 		[styles.container_open]: isOpen,
-	  });
-	
+	});
+
 	useEffect(() => {
-		setIsOpen(isContainerOpen)
+		setIsOpen(isContainerOpen);
 	}, [isContainerOpen]);
-	
+
 	return (
 		/* Не забываем указаывать role и aria-label атрибуты для интерактивных элементов */
 		<div
