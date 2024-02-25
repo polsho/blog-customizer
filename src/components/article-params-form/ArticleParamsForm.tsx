@@ -4,76 +4,89 @@ import { Text } from '../text';
 import { Select } from '../select';
 import { Separator } from '../separator'
 import { RadioGroup } from '../radio-group';
-import { OptionType, ArticleStateType, defaultArticleState, fontFamilyClasses, fontFamilyOptions, fontColors, backgroundColors, contentWidthArr, fontSizeOptions } from 'src/constants/articleProps';
-import { useState, useRef, useEffect } from 'react';
+import { OptionType, ArticleStateType, defaultArticleState, fontFamilyOptions, fontColors, backgroundColors, contentWidthArr, fontSizeOptions } from 'src/constants/articleProps';
+import { useOpenCloseForm } from './hooks/useOpenCloseForm';
+import { useState, useRef, SyntheticEvent, CSSProperties } from 'react';
 
 
 import styles from './ArticleParamsForm.module.scss';
 import clsx from 'clsx';
 
-// type ArticleParamsFormProps = {
-// 	isOpen: boolean;
-// }
+type ArticleParamsFormProps = {
+	params: ArticleStateType;
+	setParams: (params: ArticleStateType) => void;
+}
 
-export const ArticleParamsForm = () => {
+export const ArticleParamsForm = ({params, setParams}: ArticleParamsFormProps) => {
 	
 	const [isOpen, setIsOpen] = useState(false);
-
-	const [state, setState] = useState(defaultArticleState);
-	const [fontFamily, setFontFamily] = useState(state.fontFamilyOption);
-
+	
+	const [state, setState] = useState(params);
+	
+	
 	const asideClassName = clsx({
-	  [styles.container]: true,
-	  [styles.container_open]: true,
+		[styles.container]: true,
+		[styles.container_open]: isOpen,
 	});
-
+	
 	const wrapperRef = useRef<HTMLDivElement | null>(null);
 
-	function handleArrowButtonClick() {
-		setIsOpen(!isOpen);
+	const handleArrowButtonClick = useOpenCloseForm({isOpen, setIsOpen, wrapperRef});
+	
+
+
+	function handlefontFamilyInput(value: OptionType) {
+		setState({...state, fontFamilyOption: value});
 	}
 
-	function handleOutsideClick(event: MouseEvent) {
-		if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
-			setIsOpen(false);
-		}
+	function handlefontColorInput(value: OptionType) {
+		setState({...state, fontColor: value});
+	}
+
+	function handlebackgroundColorInput(value: OptionType) {
+		setState({...state, backgroundColor: value});
+	}
+
+	function handlecontentWidthInput(value: OptionType) {
+		setState({...state, contentWidth: value});
+	}
+
+	function handlefontSizeOptionInput(value: OptionType) {
+		setState({...state, fontSizeOption: value});
 	}
 
 	
-		function handleFormInput(value: OptionType) {
-			setFontFamily(value);
-			console.log(fontFamily);
-		}
 
+	function handleReset() {
+		setState(defaultArticleState);
+		setParams(defaultArticleState);
+	}
 
-	useEffect(() => {
-		document.addEventListener("mousedown", handleOutsideClick);
+	const handleSubmit = (e: SyntheticEvent) => {
+		e.preventDefault();
+		setParams(state);
+	  };
 
-    	return () => {
-      		document.removeEventListener("mousedown", handleOutsideClick);
-		}
-	}, [])
 
 	return (
 		<div ref={wrapperRef}>
 			<ArrowButton onClick={handleArrowButtonClick} isContainerOpen={isOpen} />
 			<aside className={asideClassName}>
-				<form className={styles.form}>
+				<form className={styles.form} onSubmit={handleSubmit} onReset={handleReset}>
 					<Text size={31} weight={800} uppercase={true}>
 						{'Задайте параметры'}
 					</Text>
 					<Select 	
-						selected={fontFamily && state.fontFamilyOption} 
+						selected={state.fontFamilyOption} 
 						options={fontFamilyOptions} 
-						placeholder={fontFamilyClasses[0]} 
 						title={'Шрифт'}
-						onChange={handleFormInput}
+						onChange={handlefontFamilyInput}
 						/>
-					<RadioGroup name={''} selected={state.fontSizeOption} options={fontSizeOptions} title={'Размер шрифта'}/>
-					<Select selected={state.fontColor} options={fontColors} title={'Цвет шрифта'}/>
+					<RadioGroup name={'fontSize'} selected={state.fontSizeOption} options={fontSizeOptions} title={'Размер шрифта'} onChange={handlefontSizeOptionInput}/>
+					<Select selected={state.fontColor} options={fontColors} title={'Цвет шрифта'} onChange={handlefontColorInput}/>
 					<Separator/>
-					<Select selected={state.backgroundColor} options={backgroundColors} title={'Цвет фона'} />
-					<Select selected={state.contentWidth} options={contentWidthArr} title={'Ширина контента'}/>
+					<Select selected={state.backgroundColor} options={backgroundColors} title={'Цвет фона'} onChange={handlebackgroundColorInput}/>
+					<Select selected={state.contentWidth} options={contentWidthArr} title={'Ширина контента'} onChange={handlecontentWidthInput}/>
 					<div className={styles.bottomContainer}>
 						<Button title='Сбросить' type='reset' />
 						<Button title='Применить' type='submit' />
@@ -83,3 +96,4 @@ export const ArticleParamsForm = () => {
 		</div>
 	);
 };
+
