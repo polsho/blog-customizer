@@ -6,7 +6,7 @@ import { Separator } from '../separator'
 import { RadioGroup } from '../radio-group';
 import { OptionType, ArticleStateType, defaultArticleState, fontFamilyOptions, fontColors, backgroundColors, contentWidthArr, fontSizeOptions } from 'src/constants/articleProps';
 import { useOpenCloseForm } from './hooks/useOpenCloseForm';
-import { useState, useRef, SyntheticEvent } from 'react';
+import { useState, useRef, FormEvent } from 'react';
 
 
 import styles from './ArticleParamsForm.module.scss';
@@ -59,8 +59,8 @@ export const ArticleParamsForm = ({params, setParams}: ArticleParamsFormProps) =
 		setParams(defaultArticleState);
 	}
 
-	const handleSubmit = (e: SyntheticEvent) => {
-		e.preventDefault();
+	const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+		event.preventDefault();
 		setParams(state);
 	  };
 
