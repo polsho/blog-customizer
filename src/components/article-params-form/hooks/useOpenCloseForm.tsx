@@ -23,11 +23,11 @@ export const useOpenCloseForm = ({
 			}
 		}
 
-		document.addEventListener('click', handleOutsideClick);
+		document.addEventListener('mousedown', handleOutsideClick);
 		return () => {
-			document.removeEventListener('click', handleOutsideClick);
+			document.removeEventListener('mousedown', handleOutsideClick);
 		};
-	}, []);
+	}, [isOpen, setIsOpen, wrapperRef]);
 
 	return handleArrowButtonClick;
 };
